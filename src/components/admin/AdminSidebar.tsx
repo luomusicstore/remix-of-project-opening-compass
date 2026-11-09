@@ -31,7 +31,7 @@ const navItems = [
   { to: '/admin/guide', icon: MessageSquare, label: 'GUIDE' },
 ];
 
-export default function AdminSidebar() {
+export default function AdminSidebar({ onNavigate }: { onNavigate?: () => void }) {
   const { logOut } = useAuth();
   const navigate = useNavigate();
 
@@ -41,8 +41,8 @@ export default function AdminSidebar() {
   };
 
   return (
-    <aside className="w-64 bg-card border-r border-border min-h-screen flex flex-col">
-      <div className="p-6 border-b border-border">
+    <aside className="w-full md:w-64 bg-card md:border-r border-b md:border-b-0 border-border md:min-h-screen flex flex-col">
+      <div className="hidden md:block p-6 border-b border-border">
         <div className="flex items-center gap-2">
           <Shield className="w-8 h-8 text-primary" />
           <div>
@@ -52,23 +52,24 @@ export default function AdminSidebar() {
         </div>
       </div>
 
-      <nav className="flex-1 p-4 space-y-1">
+      <nav className="flex-1 p-3 md:p-4 grid grid-cols-2 gap-1 md:block md:space-y-1">
         {navItems.map((item) => (
           <NavLink
             key={item.to}
             to={item.to}
             end={item.end}
+            onClick={onNavigate}
             className={({ isActive }) =>
               cn(
-                'flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors',
+                'flex items-center gap-2 md:gap-3 px-3 md:px-4 py-3 rounded-lg text-sm font-medium transition-colors min-w-0',
                 isActive
                   ? 'bg-primary text-primary-foreground'
                   : 'text-muted-foreground hover:bg-glass hover:text-foreground'
               )
             }
           >
-            <item.icon className="w-5 h-5" />
-            {item.label}
+            <item.icon className="w-5 h-5 shrink-0" />
+            <span className="break-words">{item.label}</span>
           </NavLink>
         ))}
       </nav>
