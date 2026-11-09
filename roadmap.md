@@ -14,3 +14,8 @@
 - [x] Add an admin-only activity view and confirmed clear-all action.
 - [x] Pass click/privacy/clearing tests and verify signed-out admin access is blocked.
 - [ ] Activate Firebase activity rules and verify real admin recording/readback/clearing (blocked: no Firebase deployment authorization or admin test session is available).
+
+# Activity recording and mobile admin
+- [ ] Improve safe click descriptions and expose recording failures to admins.
+- [ ] Provide complete replacement Firestore rules allowing guest/member activity creation and admin-only reading/clearing.
+- [ ] Adapt admin navigation and activity records for narrow phones; test capture and mobile rendering.
