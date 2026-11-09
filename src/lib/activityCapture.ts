@@ -4,6 +4,10 @@ const actions = new Set([
   'Upload', 'Search', 'See All', 'Recently Uploaded', 'Recently Added',
   'Playlist', 'Music', 'Videos', 'Genres', 'Artists', 'Home', 'Dashboard',
   'Save', 'Cancel', 'Close', 'Delete', 'Edit', 'Install App', 'Add to Playlist',
+  'User Activities', 'Users', 'Hero Slides', 'Subscriptions', 'GUIDE',
+  'Back to Site', 'Clear All Activities', 'Load older activities', 'Retry',
+  'Overview', 'Songs', 'Upload Song', 'Upload Video', 'All', 'Dancehall',
+  'Rhumba', 'Gospel', 'RnB', 'Afrobeat', 'Hip Hop', 'Trending',
 ]);
 const publicPaths = new Set([
   '/', '/music', '/videos', '/artists', '/genres', '/browse', '/recently-added',
@@ -32,15 +36,19 @@ export interface ClickActivity {
 // Only allowlisted static labels are retained; never copy arbitrary text or input values.
 export function describeActivity(target: EventTarget | null, path: string): ClickActivity | null {
   if (!(target instanceof Element) || target.closest('[data-activity-ignore]')) return null;
-  const control = target.closest('button, a, input, select, textarea, summary, [role="button"], [role="tab"], [role="checkbox"], [role="switch"], [role="slider"]') ?? target;
+  const control = target.closest('button, a, input, select, textarea, summary, video, audio, [role="button"], [role="tab"], [role="checkbox"], [role="switch"], [role="slider"], [role="option"], [role="combobox"], [role="menuitem"]') ?? target;
   const tag = control.tagName.toLowerCase();
   const role = control.getAttribute('role');
   const type = control instanceof HTMLInputElement ? control.type : '';
-  const safeTargets = new Set(['button', 'a', 'input', 'select', 'textarea', 'summary']);
-  const safeRoles = new Set(['button', 'tab', 'checkbox', 'switch', 'slider']);
+  const safeTargets = new Set(['button', 'a', 'input', 'select', 'textarea', 'summary', 'video', 'audio']);
+  const safeRoles = new Set(['button', 'tab', 'checkbox', 'switch', 'slider', 'option', 'combobox', 'menuitem']);
   const targetName = role && safeRoles.has(role) ? role : safeTargets.has(tag) ? tag : 'page';
-  const label = control.getAttribute('aria-label') || control.getAttribute('title') || control.textContent?.trim() || '';
+  const label = control.getAttribute('data-activity') || control.getAttribute('aria-label') || control.getAttribute('title') || control.textContent?.trim() || '';
   let action = actions.has(label) ? label : `Click ${targetName}`;
+  // Titles appended to player controls are private/dynamic; keep only the action.
+  for (const prefix of ['Play', 'Pause', 'Download', 'Share', 'Like', 'Unlike', 'Follow', 'Unfollow']) {
+    if (label.startsWith(`${prefix} `)) { action = prefix; break; }
+  }
   if (type === 'password') action = 'Click password field';
   else if (tag === 'input' || tag === 'textarea') action = 'Click form field';
   let destination = '';

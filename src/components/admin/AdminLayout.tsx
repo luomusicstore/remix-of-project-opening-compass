@@ -1,8 +1,9 @@
-import { ReactNode, useEffect } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { useNavigate } from '@/lib/router-compat';
 import { useAdmin } from '@/hooks/useAdmin';
 import AdminSidebar from './AdminSidebar';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Menu, X, Shield } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface AdminLayoutProps {
   children: ReactNode;
@@ -11,6 +12,7 @@ interface AdminLayoutProps {
 export default function AdminLayout({ children }: AdminLayoutProps) {
   const { isAdmin, loading } = useAdmin();
   const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     if (!loading && !isAdmin) {
@@ -31,10 +33,18 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   }
 
   return (
-    <div className="flex min-h-screen bg-background">
-      <AdminSidebar />
-      <main className="flex-1 overflow-auto">
-        <div className="p-6">{children}</div>
+    <div className="flex flex-col md:flex-row min-h-screen bg-background">
+      <header className="md:hidden flex items-center justify-between gap-3 px-4 py-3 border-b border-border bg-popover">
+        <span className="flex items-center gap-2 font-semibold"><Shield className="size-5 text-primary" />Admin Panel</span>
+        <Button variant="outline" size="icon" aria-label={menuOpen ? 'Close admin menu' : 'Open admin menu'} aria-expanded={menuOpen} aria-controls="admin-navigation" onClick={() => setMenuOpen(open => !open)}>
+          {menuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
+        </Button>
+      </header>
+      <div id="admin-navigation" className={menuOpen ? 'block md:block md:shrink-0' : 'hidden md:block md:shrink-0'}>
+        <AdminSidebar onNavigate={() => setMenuOpen(false)} />
+      </div>
+      <main className="flex-1 min-w-0 w-full overflow-x-auto">
+        <div className="p-4 md:p-6 min-w-0">{children}</div>
       </main>
     </div>
   );

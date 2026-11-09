@@ -38,9 +38,24 @@ describe('visitor click activities', () => {
     expect(activityPath('/private-email@example.com')).toBe('/other');
   });
 
-  it('does not log the clear action or activity table', () => {
-    document.body.innerHTML = '<section data-activity-ignore><button>Clear All Activities</button></section>';
-    expect(describeActivity(document.querySelector('button'), '/admin/activities')).toBeNull();
+  it('records admin activity clicks including clear all', () => {
+    document.body.innerHTML = '<section><button>Clear All Activities</button></section>';
+    expect(describeActivity(document.querySelector('button'), '/admin/activities')?.action).toBe('Clear All Activities');
+  });
+
+  it('records Play from titled music controls without retaining the song title', () => {
+    document.body.innerHTML = '<button aria-label="Play Private song"><svg><path /></svg></button>';
+    expect(describeActivity(document.querySelector('path'), '/music')).toEqual({ action: 'Play', target: 'button', page: '/music', destination: '' });
+  });
+
+  it('records Dancehall selections in portal options', () => {
+    document.body.innerHTML = '<div role="option"><span>Dancehall</span></div>';
+    expect(describeActivity(document.querySelector('span'), '/videos')?.action).toBe('Dancehall');
+  });
+
+  it('records a menu item without retaining arbitrary text', () => {
+    document.body.innerHTML = '<div role="menuitem"><span>private message</span></div>';
+    expect(describeActivity(document.querySelector('span'), '/profile')?.action).toBe('Click menuitem');
   });
 
   it('clears all existing batches, not just the displayed recent records', async () => {
