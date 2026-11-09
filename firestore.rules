@@ -331,11 +331,16 @@ service cloud.firestore {
           'Upload', 'Search', 'See All', 'Recently Uploaded', 'Recently Added',
           'Playlist', 'Music', 'Videos', 'Genres', 'Artists', 'Home', 'Dashboard',
           'Save', 'Cancel', 'Close', 'Delete', 'Edit', 'Install App', 'Add to Playlist',
+          'User Activities', 'Users', 'Hero Slides', 'Subscriptions', 'GUIDE',
+          'Back to Site', 'Clear All Activities', 'Load older activities', 'Retry',
+          'Overview', 'Songs', 'Upload Song', 'Upload Video', 'All', 'Dancehall',
+          'Rhumba', 'Gospel', 'RnB', 'Afrobeat', 'Hip Hop', 'Trending',
           'Click button', 'Click a', 'Click input', 'Click select', 'Click textarea',
           'Click summary', 'Click tab', 'Click checkbox', 'Click switch', 'Click slider',
-          'Click page', 'Click password field', 'Click form field'
+          'Click page', 'Click password field', 'Click form field',
+          'Click video', 'Click audio', 'Click option', 'Click combobox', 'Click menuitem'
         ]
-        && request.resource.data.target in ['button', 'a', 'input', 'select', 'textarea', 'summary', 'tab', 'checkbox', 'switch', 'slider', 'page']
+        && request.resource.data.target in ['button', 'a', 'input', 'select', 'textarea', 'summary', 'tab', 'checkbox', 'switch', 'slider', 'page', 'video', 'audio', 'option', 'combobox', 'menuitem']
         && request.resource.data.page in [
           '/', '/music', '/videos', '/artists', '/genres', '/browse', '/recently-added',
           '/playlist', '/favourites', '/profile', '/dashboard', '/guide', '/reels',
